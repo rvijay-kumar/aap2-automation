@@ -1,0 +1,19 @@
+---
+admin_password: ansible
+workshop_dns_zone: "rhdemo.io"
+s3_state: "present"
+teardown: false
+controllerinstall: true
+populatecontroller: true
+dns_information: "No errors with DNS"
+callback_information: "No issue with Ansible Controller callback"
+demo_information: "No errors with Demos"
+workshop_type: ""
+dns_type: aws
+valid_dns_type:
+  - aws
+  - none
+create_cluster: false
+default_tower38_url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-3.8.0-1.tar.gz
+default_tower37_url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-3.7.3-1.tar.gz
+automation_hub: true

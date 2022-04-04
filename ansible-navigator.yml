@@ -1,0 +1,15 @@
+---
+ansible-navigator:
+  playbook-artifact:
+    enable: True
+    replay: artifacts/ansible_artifact.json
+    save-as: artifacts/ansible_artifact.jsonl
+  execution-environment:
+    image: quay.io/acme_corp/workshop_ee
+    enabled: true
+    container-engine: podman
+    pull-policy: missing
+    environment-variables:
+      pass:
+        - AWS_ACCESS_KEY_ID
+        - AWS_SECRET_ACCESS_KEY
