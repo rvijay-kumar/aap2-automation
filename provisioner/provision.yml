@@ -5,8 +5,8 @@
   become: false
   gather_facts: true
   vars_files:
-   - "{{ env }}/group_vars/all.yml"
-   - "{{ env }}/group_vars/vpc_rules.yml"
+   - "{{ target_env }}/group_vars/all.yml"
+   - "{{ target_env }}/group_vars/vpc_rules.yml"
   tasks:
     - name: workshop collection final check
       block:
@@ -32,8 +32,8 @@
   become: false
   gather_facts: false
   vars_files:
-   - "{{ env }}/group_vars/all.yml"
-   - "{{ env }}/group_vars/vpc_rules.yml"
+   - "{{ target_env }}/group_vars/all.yml"
+   - "{{ target_env }}/group_vars/vpc_rules.yml"
   tasks:
     - name: Cluster nodes
       set_fact:
@@ -45,21 +45,10 @@
 - name: wait for all nodes to have SSH reachability
   hosts: "managed_nodes:control_nodes:attendance"
   vars_files:
-   - "{{ env }}/group_vars/all.yml"
-   - "{{ env }}/group_vars/vpc_rules.yml"
+   - "{{ target_env }}/group_vars/all.yml"
+   - "{{ target_env }}/group_vars/vpc_rules.yml"
   become: true
   gather_facts: false
-  tasks:
-    - include_role:
-        name: ../roles/connectivity_test
-
-- name: wait for all security nodes to have SSH reachability
-  hosts: "security_connection_check"
-  become: true
-  gather_facts: false
-  vars_files:
-   - "{{ env }}/group_vars/all.yml"
-   - "{{ env }}/group_vars/vpc_rules.yml"
   tasks:
     - include_role:
         name: ../roles/connectivity_test
@@ -69,35 +58,22 @@
   gather_facts: false
   become: true
   vars_files:
-   - "{{ env }}/group_vars/all.yml"
-   - "{{ env }}/group_vars/vpc_rules.yml"
+   - "{{ target_env }}/group_vars/all.yml"
+   - "{{ target_env }}/group_vars/vpc_rules.yml"
   tasks:
     - include_role:
         name: ../roles/user_accounts
     - include_role:
         name: ../roles/common
 
-- name: Configure /etc/hosts
-  hosts: 'managed_nodes:control_nodes'
-  gather_facts: true
-  become: true
-  vars_files:
-   - "{{ env }}/group_vars/all.yml"
-   - "{{ env }}/group_vars/vpc_rules.yml"
-  tasks:
-    - name: setup /etc/hosts file per student
-      copy:
-        src: "{{ playbook_dir }}/{{ec2_name_prefix}}/{{ username }}-etchosts.txt"
-        dest: "/etc/hosts"
-        owner: "{{ username }}"
-        group: "{{ username }}"
-
 - name: configure ansible control node
   hosts: '*ansible-1'
   gather_facts: true
+  vars: 
+    aap_archive: "{{ playbook_dir }}/{{ target_env }}/aap.tar.gz"
   vars_files:
-   - "{{ env }}/group_vars/all.yml"
-   - "{{ env }}/group_vars/vpc_rules.yml"
+   - "{{ target_env }}/group_vars/all.yml"
+   - "{{ target_env }}/group_vars/vpc_rules.yml"
   become: true
   tasks:
     - include_role:
@@ -107,9 +83,11 @@
   hosts: 'automation_hub'
   gather_facts: true
   become: true
+  vars: 
+    aap_archive: "{{ playbook_dir }}/{{ target_env }}/aap.tar.gz"
   vars_files:
-   - "{{ env }}/group_vars/all.yml"
-   - "{{ env }}/group_vars/vpc_rules.yml"
+   - "{{ target_env }}/group_vars/all.yml"
+   - "{{ target_env }}/group_vars/vpc_rules.yml"
   tasks:
     - include_role:
         name: ../roles/private_automation_hub
@@ -122,8 +100,8 @@
   become: true
   gather_facts: false
   vars_files:
-   - "{{ env }}/group_vars/all.yml"
-   - "{{ env }}/group_vars/vpc_rules.yml"
+   - "{{ target_env }}/group_vars/all.yml"
+   - "{{ target_env }}/group_vars/vpc_rules.yml"
   tasks:
     - include_role:
         name: ../roles/aws_dns
@@ -134,26 +112,13 @@
         - controllerinstall
   tags: control_node
 
-- name: populate automation controller
-  hosts: '*ansible-1'
-  become: true
-  gather_facts: false
-  vars_files:
-   - "{{ env }}/group_vars/all.yml"
-   - "{{ env }}/group_vars/vpc_rules.yml"
-  tasks:
-    - name: run populate_controller role
-      include_role:
-        name: ../roles/populate_controller
-      when:
-        - controllerinstall is defined
-        - controllerinstall|bool
-        - populatecontroller
-
 - name: print out information for instructor
   hosts: localhost
   connection: local
   gather_facts: false
+  vars_files:
+   - "{{ target_env }}/group_vars/all.yml"
+   - "{{ target_env }}/group_vars/vpc_rules.yml"
   tasks:
     - name: set facts for output
       set_fact:
@@ -161,15 +126,11 @@
           PROVISIONER SUMMARY
           *******************
           - Workshop name is {{ec2_name_prefix}}
-          - Instructor inventory is located at  {{playbook_dir}}/{{ env }}/{{ec2_name_prefix}}/instructor_inventory.txt
-          - Private key is located at {{playbook_dir}}/{{ env }}/{{ec2_name_prefix}}/{{ec2_name_prefix}}-private.pem
-          {% if attendance %}
-          - {{hostvars['attendance-host'].login_website_information | default("attendance feature is not functioning") }}
-          {% endif %}
+          - Private key is located at {{playbook_dir}}/{{ target_env }}/{{ec2_name_prefix}}/{{ec2_name_prefix}}-private.pem
 
           FAILURES
           *******************
-          {{dns_information}}
+          {{ dns_information}}
           {{callback_information}}
           {{ demo_information }}
 

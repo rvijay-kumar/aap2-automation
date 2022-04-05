@@ -8,10 +8,10 @@
   block:
     - name: Check that the manifest.zip exists
       stat:
-        path: "{{ playbook_dir }}/manifest.zip"
+        path: "{{ playbook_dir }}/{{ target_env }}/manifest.zip"
       register: manifest_result
     - fail:
-        msg: "Need a manifest file at {{ playbook_dir }}/manifest.zip"
+        msg: "Need a manifest file at {{ playbook_dir }}/{{ target_env }}/manifest.zip"
       when:
         - not manifest_result.stat.exists
   rescue:

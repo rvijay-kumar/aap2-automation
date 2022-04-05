@@ -303,7 +303,7 @@ For frequently asked questions see the [FAQ](../docs/faq.md)
 
 ## More info on what is happening
 
-The `provision_lab.yml` playbook creates a work bench for each student, configures them for password authentication, and creates an inventory file for each user with their IPs and credentials. An instructor inventory file is also created in the current directory which will let the instructor access the nodes of any student.  This file will be called `instructor_inventory.txt`
+The `provision_lab.yml` playbook creates a work bench for each student, configures them for password authentication, and creates an inventory file for each user with their IPs and credentials. 
 
 What does the AWS provisioner take care of automatically?
 

@@ -27,7 +27,7 @@ Example of using role:
 
 This will output a tar.gz file named ```aap.tar.gz``` in your ```playbook_dir```
 
-Literally-> `"{{ playbook_dir }}/{{ env }}/aap.tar.gz"`
+Literally-> `"{{ playbook_dir }}/{{ target_env }}/aap.tar.gz"`
 
 
 

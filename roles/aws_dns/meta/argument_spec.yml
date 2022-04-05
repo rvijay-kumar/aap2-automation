@@ -63,7 +63,3 @@ argument_specs:
           - present
           - absent
         required: true
-      student_total:
-        description: The total number of students for the workshop.
-        type: int
-        required: true

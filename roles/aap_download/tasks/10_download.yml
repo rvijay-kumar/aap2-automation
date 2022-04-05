@@ -24,7 +24,7 @@
     headers:
       accept: "application/json"
       Authorization: "Bearer {{ temp_token.json.access_token }}"
-    dest: "{{ playbook_dir }}/{{ env }}/aap.tar.gz"
+    dest: "{{ playbook_dir }}/{{ target_env }}/aap.tar.gz"
     checksum: "sha256: {{ provided_sha_value }}"
   register: download_aap_tarball
   until: download_aap_tarball is not failed
