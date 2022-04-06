@@ -4,7 +4,6 @@
     src: "hub_install.j2"
     dest: "{{ aap_dir }}/inventory"
 
-# sean note to self... should I remove the gpgcheck=0?
 - name: run the Automation Hub installer
   shell: "./setup.sh -e gpgcheck=0"
   args:

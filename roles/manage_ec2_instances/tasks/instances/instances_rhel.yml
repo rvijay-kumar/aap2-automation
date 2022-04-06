@@ -38,10 +38,10 @@
           iops: "{{ ec2_info[rhel].disk_iops }}"
           throughput: "{{ ec2_info[rhel].disk_throughput }}"
           delete_on_termination: true
-  register: sean_test
+  register: ec2_output 
 
 - debug:
-    msg: "{{ sean_test }}"
+    msg: "{{ ec2_output }}"
 
 - name: grab instance ids to tag node1
   amazon.aws.ec2_instance_info:
